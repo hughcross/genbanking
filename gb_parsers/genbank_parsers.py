@@ -14,12 +14,15 @@ def parse_genbank_features(genbank_file):
     annots = {}
     #seqdict = {} # do this in separate function 
     for rec in seq_records:
-        gi_id = rec.annotations['gi']
         full_epithet = rec.annotations['organism']
         epithet = full_epithet.replace(' ','_').replace('.','')
-        rec_id = epithet+':'+gi_id
-        descr = rec.description
         name = rec.name
+        if 'gi' in rec.annotations:
+            gi_id = rec.annotations['gi']
+            rec_id = epithet+':'+gi_id
+        else:
+            rec_id = epithet+':'+name
+        descr = rec.description
         refs = rec.annotations['references']
         ref0 = refs[0]
         if ref0.pubmed_id:
@@ -32,7 +35,11 @@ def parse_genbank_features(genbank_file):
         annots.setdefault(rec_id, {})['description']=descr
         annots.setdefault(rec_id, {})['seq_name']=name
         annots.setdefault(rec_id, {})['pubmed_id']=pub
-        annots.setdefault(rec_id, {})['gi']=gi_id
+        if 'gi' in rec.annotations:
+
+            annots.setdefault(rec_id, {})['gi']=gi_id
+        else:
+            annots.setdefault(rec_id, {})['gi']='none'
         # make sequence dict
         #sequence = str(rec.seq)
         #seqdict[rec_id]=sequence
@@ -80,5 +87,23 @@ def parse_gb_feature_dict(feature_dictionary):
                 cds_dict.setdefault(k, {})['ncbi_protein_id']=gb_protein
     return (src_dict, cds_dict)
 
+def genbank_to_seqdict(genbank_file):
+    """function to parse genbank files to extract sequences"""
+    handle = open(genbank_file, 'r')
+    seq_records = SeqIO.parse(handle, 'gb')
+    # start by creating one dicts of features 
+    seqdict = {}
+    for rec in seq_records:
+        full_epithet = rec.annotations['organism']
+        epithet = full_epithet.replace(' ','_').replace('.','')
+        name = rec.name
+        if 'gi' in rec.annotations:
+            gi_id = rec.annotations['gi']
+            rec_id = epithet+':'+gi_id
+        else:
+            rec_id = epithet+':'+name
+        sequence = str(rec.seq)
+        seqdict[rec_id]=sequence
+    return seqdict
 
 

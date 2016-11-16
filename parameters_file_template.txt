@@ -1,4 +1,4 @@
 #parameter file for blast parsing script
-FORMAT=qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore
-MIN_LENGTH=100
-MIN_PCT_ID=50
+FORMAT=qseqid sseqid length pident mismatch qcovs evalue bitscore qstart qend sstart send gapopen
+MIN_LENGTH=500
+MIN_PCT_ID=95

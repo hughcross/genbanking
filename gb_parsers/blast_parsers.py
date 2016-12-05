@@ -36,7 +36,7 @@ def blast_parser(blastfile, tab='standard'):
                     hitlist.append(fld_value)
                     ct = 0
                 hitnum = str(fld_value)+';hit'+str(ct)
-                rng_index.setdefault(hitnum, []).append(hitnum)
+                rng_index.setdefault(str(fld_value), []).append(hitnum)
 
             ranges.setdefault(hitnum, {})[fld_name]=fld_value
     return(rng_index, ranges)

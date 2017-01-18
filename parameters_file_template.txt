@@ -1,4 +1,16 @@
-#parameter file for blast parsing script
+## parameter file for blast parsing script
 FORMAT=qseqid sseqid length pident mismatch qcovs evalue bitscore qstart qend sstart send gapopen
+## length means Alignment length
 MIN_LENGTH=500
+## pident means Percentage of identical matches
 MIN_PCT_ID=95
+## nident means Number of identical matches
+#MIN_NUM_ID=50
+## mismatch means Number of mismatches 
+MAX_MISMATCH=20
+## evalue means Expect value
+#EVALUE=
+## sseqid means Subject Seq-id
+#SUBJECT_ID=string
+## nident means Number of identical matches
+#NUM_ID=

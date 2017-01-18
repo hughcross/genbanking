@@ -15,6 +15,9 @@ def blast_parser(blastfile, tab='standard'):
     hit_index = {}
     hit_dict = {}
     hitlist = []
+    # adding list of queries to pass to tuple, to preserve order of queries
+    query_list = []
+    hit_order = []
     fld_range = len(fmt_list)
     ct = 0
     for hit in blast:
@@ -37,9 +40,13 @@ def blast_parser(blastfile, tab='standard'):
                     ct = 0
                 hitnum = str(fld_value)+';hit'+str(ct)
                 rng_index.setdefault(str(fld_value), []).append(hitnum)
+                if fld_value not in query_list:
+                    query_list.append(fld_value)
 
             ranges.setdefault(hitnum, {})[fld_name]=fld_value
-    return(rng_index, ranges)
+            if hitnum not in hit_order:
+                hit_order.append(hitnum)
+    return(rng_index, ranges, query_list, hit_order)
 
 def get_parameters(parameter_file):
     para_file = open(parameter_file, 'r')
@@ -48,7 +55,7 @@ def get_parameters(parameter_file):
         line = line.strip('\n')
         if line.startswith('#'):
             continue
-        else:
+        else: # >> rewrite to take multiple types
             line_parts = line.split('=')
             para_name = line_parts[0]
             para_value =line_parts[1]
@@ -61,4 +68,39 @@ def get_parameters(parameter_file):
                 para_dict['MIN_PCT_ID']=int(para_value)
             elif para_name == 'QCOV':
                 para_dict['QCOV']=int(para_value)
+            elif para_name == 'MAX_MISMATCH':
+                para_dict['MAX_MISMATCH']=int(para_value)
     return para_dict
+
+def filter_blast(blast_result_dict, blast_parameters):
+    """Filter a blast result dictionary based on variable parameters"""
+    ## >> have to add more to following
+    field_match = {'MIN_LENGTH':'length','MIN_PCT_ID':'pident','MAX_MISMATCH':'mismatch','EVALUE':'evalue','SUBJECT_ID':'sseqid'}
+    mins = ['MIN_LENGTH','MIN_PCT_ID'] # have to add to this
+    maxes = ['MAX_MISMATCH','EVALUE'] # have to add
+    matches = ['SUBJECT_ID']
+    filtered_blast = {}
+    blast_parameters.pop('FORMAT')
+    num_conditions = len(blast_parameters)
+    query_index = blast_result_dict[0]
+    hit_results = blast_result_dict[1]
+    for key, value in query_index.iteritems():
+        for hit in value: # now loops through lists of hits for this query
+            conditions_reached = 0
+            hit_dict = hit_results[hit]
+            # now test all conditions separately
+            for k,v in blast_parameters.iteritems():
+                blast_field = field_match[k]
+                if k in mins:
+                    if hit_dict[blast_field] > v:
+                        conditions_reached += 1
+                elif k in maxes:
+                    if hit_dict[blast_field] < v:
+                        conditions_reached += 1
+                elif k in matches:
+                    if hit_dict[blast_field] == v:
+                        conditions_reached += 1
+
+            if conditions_reached == num_conditions:
+                filtered_blast[hit]=hit_dict
+    return filtered_blast

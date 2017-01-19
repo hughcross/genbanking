@@ -9,8 +9,12 @@ MIN_PCT_ID=95
 ## mismatch means Number of mismatches 
 MAX_MISMATCH=20
 ## evalue means Expect value
-#EVALUE=
+#EVALUE=1e20
 ## sseqid means Subject Seq-id
 #SUBJECT_ID=string
-## nident means Number of identical matches
-#NUM_ID=
+## qcovs means Query Coverage Per Subject
+QCOV=80
+## minimum sstart (Start of alignment in subject)
+#MIN_SSTART=100
+## maximum sstart (Start of alignment in subject)
+#MAX_SSTART=300

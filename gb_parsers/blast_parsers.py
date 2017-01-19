@@ -51,6 +51,10 @@ def blast_parser(blastfile, tab='standard'):
 def get_parameters(parameter_file):
     para_file = open(parameter_file, 'r')
     para_dict = {}
+    # identify category of parameter
+    integers = ['MIN_LENGTH', 'MIN_NUM_ID', 'MAX_MISMATCH', 'MIN_SSTART', 'MAX_SSTART']
+    floaters = ['MIN_PCT_ID', 'EVALUE']
+    strings = ['SUBJECT_ID']
     for line in para_file:
         line = line.strip('\n')
         if line.startswith('#'):
@@ -62,29 +66,29 @@ def get_parameters(parameter_file):
             if para_name == 'FORMAT':
                 fieldlist = para_value.split(' ')
                 para_dict['FORMAT']=fieldlist
-            elif para_name == 'MIN_LENGTH':
-                para_dict['MIN_LENGTH']=int(para_value)
-            elif para_name == 'MIN_PCT_ID':
-                para_dict['MIN_PCT_ID']=int(para_value)
-            elif para_name == 'QCOV':
-                para_dict['QCOV']=int(para_value)
-            elif para_name == 'MAX_MISMATCH':
-                para_dict['MAX_MISMATCH']=int(para_value)
+            elif para_name in integers:
+                para_dict[para_name]=int(para_value)
+            elif para_name in floaters:
+                para_dict[para_name]=float(para_value)
+            elif para_name in strings:
+                para_dict[para_name]=para_value
     return para_dict
 
 def filter_blast(blast_result_dict, blast_parameters):
     """Filter a blast result dictionary based on variable parameters"""
     ## >> have to add more to following
-    field_match = {'MIN_LENGTH':'length','MIN_PCT_ID':'pident','MAX_MISMATCH':'mismatch','EVALUE':'evalue','SUBJECT_ID':'sseqid'}
-    mins = ['MIN_LENGTH','MIN_PCT_ID'] # have to add to this
-    maxes = ['MAX_MISMATCH','EVALUE'] # have to add
+    field_match = {'MIN_SSTART':'sstart','MAX_SSTART':'sstart','QCOV':'qcovs','MIN_LENGTH':'length','MIN_PCT_ID':'pident','MAX_MISMATCH':'mismatch','EVALUE':'evalue','SUBJECT_ID':'sseqid'}
+    mins = ['MIN_LENGTH','MIN_PCT_ID','MIN_SSTART', 'QCOV'] # have to add to this
+    maxes = ['MAX_MISMATCH','EVALUE', 'MAX_SSTART'] # have to add
     matches = ['SUBJECT_ID']
     filtered_blast = {}
     blast_parameters.pop('FORMAT')
     num_conditions = len(blast_parameters)
     query_index = blast_result_dict[0]
     hit_results = blast_result_dict[1]
+    #>> have to add option for limiting results to the single best match
     for key, value in query_index.iteritems():
+        # add dictionary of lists for each hit, and then sort after all hits processed
         for hit in value: # now loops through lists of hits for this query
             conditions_reached = 0
             hit_dict = hit_results[hit]

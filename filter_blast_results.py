@@ -31,6 +31,15 @@ help='minimum percent of identical matches (pident) [optional]')
 parser.add_argument('-Q', '--min_query_cov', dest='qcoverage',
 type=int,
 help='minimum query coverage (qcov) [optional]')
+parser.add_argument('-B', '--min_bitscore', dest='minbit',
+type=int,
+help='minimum Bit score (bitscore) [optional]')
+parser.add_argument('-G', '--max_gapopen', dest='gapops',
+type=int,
+help='maximum number of gap openings (gapopen) [optional]')
+parser.add_argument('-E', '--min_evalue', dest='ev',
+type=int,
+help='minimum Evalue (evalue) [optional]')
 ## >>> add more arguments for other options
 ## argparse arguments
 args = parser.parse_args()
@@ -40,6 +49,9 @@ parameter_file = args.para
 min_length = args.minl
 min_pct_id = args.minpID
 qcov = args.qcoverage
+bit = args.minbit
+gap = args.gapops
+evalue = args.ev
 # check for parameters file
 if args.para:
     blast_parameters = get_parameters(parameter_file)
@@ -57,6 +69,12 @@ if args.minpID:
     blast_parameters['MIN_PCT_ID']=min_pct_id
 if args.qcoverage:
     blast_parameters['QCOV']=qcov
+if args.minbit:
+    blast_parameters['MIN_BITSCORE']=bit
+if args.gapops:
+    blast_parameters['MAX_GAPOPEN']=gap
+if args.ev:
+    blast_parameters['MAX_EVALUE']=evalue
 # get blast results
 blast_results = blast_parser(blastfile, blast_tab_format)
 hit_order = blast_results[3]

@@ -52,9 +52,9 @@ def get_parameters(parameter_file):
     para_file = open(parameter_file, 'r')
     para_dict = {}
     # identify category of parameter
-    integers = ['MIN_LENGTH', 'MIN_NUM_ID', 'MAX_MISMATCH', 'MIN_SSTART', 'MAX_SSTART']
-    floaters = ['MIN_PCT_ID', 'EVALUE']
-    strings = ['SUBJECT_ID']
+    integers = ['MIN_LENGTH', 'MIN_NUM_ID', 'MAX_MISMATCH','MIN_QCOV','SUB_LENGTH','MIN_QSTART','MAX_QSTART','MIN_QEND','MAX_QEND','MIN_SSTART','MAX_SSTART','MIN_SEND','MAX_SEND','MIN_POSITIVE','MAX_GAPOPEN','MAX_GAPS']
+    floaters = ['MIN_PCT_ID','MAX_EVALUE','MIN_BITSCORE']
+    strings = ['IN_SUBJECT_ID','IN_TITLE','IN_SSEQ']
     for line in para_file:
         line = line.strip('\n')
         if line.startswith('#'):
@@ -77,10 +77,10 @@ def get_parameters(parameter_file):
 def filter_blast(blast_result_dict, blast_parameters):
     """Filter a blast result dictionary based on variable parameters"""
     ## >> have to add more to following
-    field_match = {'MIN_SSTART':'sstart','MAX_SSTART':'sstart','QCOV':'qcovs','MIN_LENGTH':'length','MIN_PCT_ID':'pident','MAX_MISMATCH':'mismatch','EVALUE':'evalue','SUBJECT_ID':'sseqid'}
-    mins = ['MIN_LENGTH','MIN_PCT_ID','MIN_SSTART', 'QCOV'] # have to add to this
-    maxes = ['MAX_MISMATCH','EVALUE', 'MAX_SSTART'] # have to add
-    matches = ['SUBJECT_ID']
+    field_match = {'SUB_LENGTH':'slen','MIN_QSTART':'qstart','MAX_QSTART':'qstart','MIN_QEND':'qend','MAX_QEND':'qend','MIN_SEND':'send','MAX_SEND':'send','MIN_BITSCORE':'bitscore','MIN_POSITIVE':'positive','MAX_GAPOPEN':'gapopen','MAX_GAPS':'gaps','IN_TITLE':'stitle','IN_SSEQ':'sseq','MIN_SSTART':'sstart','MAX_SSTART':'sstart','MIN_QCOV':'qcovs','MIN_LENGTH':'length','MIN_PCT_ID':'pident','MAX_MISMATCH':'mismatch','MAX_EVALUE':'evalue','IN_SUBJECT_ID':'sseqid'}
+    mins = ['MIN_LENGTH','MIN_PCT_ID','MIN_SSTART','MIN_QCOV','SUB_LENGTH','MIN_QSTART','MIN_QEND','MIN_SEND','MIN_BITSCORE','MIN_POSITIVE'] 
+    maxes = ['MAX_MISMATCH','MAX_EVALUE','MAX_SSTART','MAX_QSTART','MAX_QEND','MAX_SEND','MAX_GAPOPEN','MAX_GAPS'] 
+    containers = ['IN_SUBJECT_ID','IN_TITLE','IN_SSEQ']
     filtered_blast = {}
     blast_parameters.pop('FORMAT')
     num_conditions = len(blast_parameters)
@@ -101,8 +101,8 @@ def filter_blast(blast_result_dict, blast_parameters):
                 elif k in maxes:
                     if hit_dict[blast_field] < v:
                         conditions_reached += 1
-                elif k in matches:
-                    if hit_dict[blast_field] == v:
+                elif k in containers:
+                    if hit_dict[blast_field] in v:
                         conditions_reached += 1
 
             if conditions_reached == num_conditions:

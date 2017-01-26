@@ -1,7 +1,7 @@
 ## parameter file for blast parsing script
 FORMAT=qseqid sseqid length pident mismatch qcovs evalue bitscore qstart qend sstart send gapopen
 MIN_LENGTH=200
-#MIN_PCT_ID=95
+MIN_PCT_ID=95
 #MIN_NUM_ID=50
 #MAX_MISMATCH=20
 #MAX_EVALUE=1e-200

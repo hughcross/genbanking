@@ -102,7 +102,7 @@ def filter_blast(blast_result_dict, blast_parameters):
                     if hit_dict[blast_field] < v:
                         conditions_reached += 1
                 elif k in containers:
-                    if hit_dict[blast_field] in v:
+                    if v in hit_dict[blast_field]: # need to fix this, was in v
                         conditions_reached += 1
 
             if conditions_reached == num_conditions:

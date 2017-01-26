@@ -60,8 +60,20 @@ if args.para:
 else:
     # have to put default format parameters here, in case none provided
     blast_tab_format = ['qseqid', 'sseqid', 'pident', 'length', 'mismatch', 'gapopen', 'qstart', 'qend', 'sstart', 'send', 'evalue', 'bitscore']
+    blast_parameters = {}
+    blast_parameters['FORMAT']=blast_tab_format
 
 ## need to catch exception here is no parameters file AND no parameters options on command line
+if args.input is None:
+    print('You need to enter input file (-i)')
+    sys.exit(0)
+
+if args.out:
+    blast_output = blastout
+else:
+    blast_out_filename = 'filtered_'+blastfile
+    blast_output = open(blast_out_filename, 'w')
+
 if args.minl:
     blast_parameters['MIN_LENGTH']=min_length
 # add more, and exception
@@ -79,6 +91,9 @@ if args.ev:
 blast_results = blast_parser(blastfile, blast_tab_format)
 hit_order = blast_results[3]
 # filter blast results
+if len(blast_parameters) == 1:
+    print('you did not enter any parameters to filter')
+
 filt_blast_results = filter_blast(blast_results, blast_parameters)
 
 # >> add filter for limiting results to only best hit of group
@@ -95,4 +110,4 @@ for hit in hit_order:
             blaststring = blaststring+field_value+'\t'
         blastwrite = blaststring+'\n'
         blastwrite = blastwrite.replace('\t\n','\n')
-        blastout.write(blastwrite)
+        blast_output.write(blastwrite)

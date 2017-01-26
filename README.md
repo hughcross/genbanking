@@ -7,7 +7,7 @@ This repository is a set of tools to extract information from common NCBI files 
 
 *Description*
 
-After having written many scripts to parse different kinds of blast output, I finally wrote a function that will parse any blast result file that uses tabular format (**-outfmt 6**). The script will assume that you use the default tab format, but it will also read any custom format, as long as you provide the format in a parameters file. 
+After having written many scripts to parse different kinds of blast output, I finally wrote a function that will parse any blast results file that uses tabular format (**-outfmt 6**). The script will assume that you use the default tab format, but it will also read any custom format, as long as you provide the format in a parameters file. 
 
 ### Basic Usage
 
@@ -25,8 +25,7 @@ There are six possible filters that can be entered as command line options. To s
 
 `filter_blast_results.py -h`
 
-
-
+<br></br>
 ### Adding Additional Parameters
 
 

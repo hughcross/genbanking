@@ -28,12 +28,24 @@ There are six possible filters that can be entered as command line options. To s
 
 To filter with additional fields, you can make a parameters file to filter with up to 22 blast fields. I have included a template file: *parameters_file_template.txt*, that lists all the options. Make a copy of this file, and just uncomment (take out the # at the start of the line) any field that you want to use, and fill in the appropriate number or text after the = sign. At a minimum you need to indicate the tabular FORMAT used (this file has the default table format set up). The template file is set to search for the same parameters as the second example above, so you can check to see that it is working the same. Add the parameters file using the '-p' option:
 
-`filter_blast_results.py -i example_blast_output_default_format.txt -p parameters_file_template.txt -o example_output`
+`filter_blast_results.py -i example_blast_output_default_format.txt -p parameters_template.txt -o example_output`
+
+I have included the file *descriptions_of_parameters.txt* that describes the different options and what fields they are filtering. 
+<br></br>
+### Searching for Text in Results
+
+Three parameters can be used to search for text within results. You can search for key words or terms within either the Subject Seq-id (sseqid) or Subject Title (stitle) using the '*IN_SUBJECT_ID*' or '*IN_TITLE*' parameters, respectively. You can also search for DNA or protein sequence motifs within the Subject Sequence (sseq) using the '*IN_SEQ*' parameter. However, the search is simple and will not account for mutations or gaps in the sequence. You can try this on the example blast file: uncomment the '*IN_SUBJECT_ID*' parameter, and rerun the command as above. The example will search for all occurrences of the keyword 'ARATH' in the blast results, which is a Swiss-Prot keyword. You could use this to search for specific gi numbers or taxa, for example. 
+<br></br>
+### Using Custom Table Formats
+
+As mentioned above, I have set this program up to use custom table formats that are possible through the tabular formatting option. This is one reason I really like this output option when using BLAST. You are able to add any number of options based on what you need for that particular search. I have included an alternative parameter format template: '*custom_format_parameters_template.txt*', which has a custom table format (in the line that starts 'FORMAT='). In this example, I ran a BLAST search using the following command:
+
+`blastn -query input_seqs.fa -db WS77111.fa -max_target_seqs 5 -outfmt "6 qseqid sseqid length pident mismatch qcovs evalue bitscore qstart qend sstart send gapopen" -out example_custom_blastfile.outfmt6`
+
+The only important thing to notice in the above command is how the custom output format is set up. For a complete list of fields, see full BLAST help ('blastn -help'). To filter your own custom blast results, just copy from the format within the quotes (except for the 6), and paste that in a parameters file after 'FORMAT=', and uncomment and amend any other fields you wish to use to filter, and you will be set. Note that even if you call a parameters file, you can override any of the file filters using the command line option, which might be useful if you would like to try different options with a custom tab format.
+
+An example of filtering using custom formatting:
+
+`filter_blast_results.py -i example_custom_blastfile.outfmt6 -p custom_format_parameters_template.txt -o example_custom_output`
 
 
-
-qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore'
-
-
-custom:
-qseqid sseqid length pident mismatch qcovs evalue bitscore qstart qend sstart send gapopen

@@ -24,7 +24,6 @@ In the above example, results will be filtered for both minimum alignment length
 There are six possible filters that can be entered as command line options. To see all the options, enter:
 
 `filter_blast_results.py -h`
-
 <br></br>
 ### Adding Additional Parameters
 

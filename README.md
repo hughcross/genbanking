@@ -69,7 +69,7 @@ All you need is to name the input file and choose a name for the fasta output. Y
 
 The resulting sequence file names will all be in the format genus_species:gi-number, which will look like this:
 
->Senna_occidentalis:169667647 
+>\>Senna_occidentalis:169667647 
 
 If you prefer, you can use the accession number with the -a option: 
 
@@ -77,7 +77,7 @@ If you prefer, you can use the accession number with the -a option:
 
 Which should give you:
 
-Senna_occidentalis:AF365030
+\>Senna_occidentalis:AF365030
 
 You can also add the gene name with -G and gene notes (if the gb file has notes) with -n
 

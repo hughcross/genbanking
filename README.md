@@ -61,8 +61,36 @@ This script extracts sequences from genbank format files, renaming the sequences
 
 ### Basic Usage
 
+All you need is to name the input file and choose a name for the fasta output. You can test with the supplied example genbank file:
 
+`genbank_to_fasta.py -i genbank_example.gb -o output.fasta`
+<br></br>
+### Additional Options
 
+The resulting sequence file names will all be in the format genus_species:gi-number, which will look like this:
 
+>Senna_occidentalis:169667647 
+
+If you prefer, you can use the accession number with the -a option: 
+
+`genbank_to_fasta.py -i genbank_example.gb -o output.fasta -a`
+
+Which should give you:
+
+Senna_occidentalis:AF365030
+
+You can also add the gene name with -G and gene notes (if the gb file has notes) with -n
+
+`genbank_to_fasta.py -i genbank_example.gb -o output.fasta -G`
+
+Senna_occidentalis:14595386 trnL
+
+The full description can be added after the sequence name with -d. In the following example, the option -g is also used to add a 'gi' to the GI number, to make it more clear:
+
+`genbank_to_fasta.py -i genbank_example.gb -o output.fasta -dg`
+
+Senna_occidentalis:gi14595386 Senna occidentalis voucher Bruneau 1257 (MT) tRNA-Leu (trnL) gene, intron; chloroplast.
+
+You can add both the gene and description to the end of the file, but that will usually be redundant. 
 
 

@@ -77,19 +77,19 @@ If you prefer, you can use the accession number with the -a option:
 
 Which should give you:
 
-\>Senna_occidentalis:AF365030
+>\>Senna_occidentalis:AF365030
 
 You can also add the gene name with -G and gene notes (if the gb file has notes) with -n
 
 `genbank_to_fasta.py -i genbank_example.gb -o output.fasta -G`
 
-Senna_occidentalis:14595386 trnL
+>\>Senna_occidentalis:14595386 trnL
 
 The full description can be added after the sequence name with -d. In the following example, the option -g is also used to add a 'gi' to the GI number, to make it more clear:
 
 `genbank_to_fasta.py -i genbank_example.gb -o output.fasta -dg`
 
-Senna_occidentalis:gi14595386 Senna occidentalis voucher Bruneau 1257 (MT) tRNA-Leu (trnL) gene, intron; chloroplast.
+>\>Senna_occidentalis:gi14595386 Senna occidentalis voucher Bruneau 1257 (MT) tRNA-Leu (trnL) gene, intron; chloroplast.
 
 You can add both the gene and description to the end of the file, but that will usually be redundant. 
 

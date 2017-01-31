@@ -47,5 +47,22 @@ The only important thing to notice in the above command is how the custom output
 An example of filtering using custom formatting:
 
 `filter_blast_results.py -i example_custom_blastfile.outfmt6 -p custom_format_parameters_template.txt -o example_custom_output`
+<br></br>
+<br></br>
+## genbank_to_fasta.py
+
+Software prerequisite:
+
+* Biopython https://github.com/biopython/biopython.github.io/
+
+*Description:*
+
+This script extracts sequences from genbank format files, renaming the sequences by the taxon, not the gi number, as in the standard Biopython tool. I prefer to have sequence names more descriptive, so this script simply modifies the output from the SeqIO tool, and also allows for additional annotations to be added to the sequence name. 
+
+### Basic Usage
+
+
+
+
 
 

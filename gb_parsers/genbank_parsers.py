@@ -55,6 +55,7 @@ def parse_gb_feature_dict(feature_dictionary):
     # now try to create dictionaries of ranges, translations, organism, protein id, etc
     src_dict = {}
     cds_dict = {}
+    gene_dict = {}
     for k,v in feature_dictionary.iteritems():
         for ft in v:
             if ft.type == 'source':
@@ -85,7 +86,16 @@ def parse_gb_feature_dict(feature_dictionary):
                 cds_dict.setdefault(k, {})['cds_product']=product
                 cds_dict.setdefault(k, {})['cds_translation']=trans
                 cds_dict.setdefault(k, {})['ncbi_protein_id']=gb_protein
-    return (src_dict, cds_dict)
+            elif ft.type == 'gene':
+                #gen = ft.gene
+                gen_quals = ft.qualifiers
+                gene = gen_quals['gene']
+                gene_dict.setdefault(k, {})['gene']=gene
+                if 'note' in gen_quals:
+                    gene_dict.setdefault(k, {})['note']=gen_quals['note']    
+                
+
+    return (src_dict, cds_dict, gene_dict)
 
 def genbank_to_seqdict(genbank_file):
     """function to parse genbank files to extract sequences"""

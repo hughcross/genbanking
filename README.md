@@ -46,7 +46,7 @@ The only important thing to notice in the above command is how the custom output
 
 An example of filtering using custom formatting:
 
-`filter_blast_results.py -i example_custom_blastfile.outfmt6 -p custom_format_parameters_template.txt -o example_custom_output`
+`filter_blast_results.py -i example_custom_blast.out -p custom_format_parameters_template.txt -o example_custom_output`
 <br></br>
 <br></br>
 ## genbank_to_fasta.py

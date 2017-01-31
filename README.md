@@ -40,7 +40,7 @@ Three parameters can be used to search for text within results. You can search f
 
 As mentioned above, I have set this program up to use custom table formats that are possible through the tabular formatting option. This is one reason I really like this output option when using BLAST. You are able to add any number of options based on what you need for that particular search. I have included an alternative parameter format template: '*custom_format_parameters_template.txt*', which has a custom table format (in the line that starts 'FORMAT='). In this example, I ran a BLAST search using the following command:
 
-`blastn -query input_seqs.fa -db WS77111.fa -max_target_seqs 5 -out example_custom_blastfile.outfmt6 -outfmt "6 qseqid sseqid length pident mismatch qcovs evalue bitscore qstart qend sstart send gapopen"`
+`blastn -query input_seqs.fa -db WS77111.fa -max_target_seqs 5 -out example_custom_blast.out -outfmt "6 qseqid sseqid length pident mismatch qcovs evalue bitscore qstart qend sstart send gapopen"`
 
 The only important thing to notice in the above command is how the custom output format is set up. For a complete list of fields, see full BLAST help ('blastn -help'). To filter your own custom blast results, just copy from the format within the quotes (except for the 6), and paste that in a parameters file after 'FORMAT=', and uncomment and amend any other fields you wish to use to filter, and you will be set. Note that even if you call a parameters file, you can override any of the file filters using the command line option, which might be useful if you would like to try different options with a custom tab format.
 

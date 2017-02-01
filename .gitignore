@@ -1,0 +1,6 @@
+# all python binary files
+*.pyc
+# all binary files in functions subfolder
+gb_parsers/*.pyc
+# jupyter notebook hidden files
+.ipynb_checkpoints/*

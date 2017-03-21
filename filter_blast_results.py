@@ -78,7 +78,7 @@ if args.minl:
     blast_parameters['MIN_LENGTH']=min_length
 # add more, and exception
 if args.minpID:
-    blast_parameters['MIN_PCT_ID']=min_pct_id
+    blast_parameters['MIN_PCT_ID']=float(min_pct_id)
 if args.qcoverage:
     blast_parameters['QCOV']=qcov
 if args.minbit:

@@ -1,20 +1,52 @@
 
-import pandas as pd
-import numpy as np 
 
-
-# function for parsing blast file, note: this is a new one that adds pandas and should speed it up
+# function for parsing blast file
 def blast_parser(blastfile, tab='standard'):
-    """parse tabular blast files with pandas to retrieve all information for downstream"""
+    """parse tabular blast files to retrieve all information for downstream"""
     blast = open(blastfile)
     if tab is 'standard': #'standard': # alternative add later
         fmt_list = ['qseqid', 'sseqid', 'pident', 'length', 'mismatch', 'gapopen', 'qstart', 'qend', 'sstart', 'send', 'evalue', 'bitscore']
     else:
         fmt_list = tab
-    
-    blastDF = pd.read_table(blastfile, sep='\t', names=fmt_list)
-    
-    return blastDF
+    integers = ['qlen','slen','qstart','qend','sstart','send','length','nident','mismatch','positive','gapopen','gaps','qcovs','qcovhsp']
+    floaters = ['bitscore','score','pident','ppos','evalue']
+    ranges = {}
+    rng_index = {}
+    hit_index = {}
+    hit_dict = {}
+    hitlist = []
+    # adding list of queries to pass to tuple, to preserve order of queries
+    query_list = []
+    hit_order = []
+    fld_range = len(fmt_list)
+    ct = 0
+    for hit in blast:
+        hit = hit.strip('\n')
+        parts = hit.split('\t')
+        for fld in range(0,fld_range):
+            fld_name = fmt_list[fld]
+            # differentiate between field types
+            if fld_name in integers:
+                fld_value = int(parts[fld])
+            elif fld_name in floaters:
+                fld_value = float(parts[fld])
+            else:
+                fld_value = parts[fld]
+            if fld == 0:
+                if fld_value in hitlist:
+                    ct += 1
+                else:
+                    hitlist.append(fld_value)
+                    ct = 0
+                hitnum = str(fld_value)+';hit'+str(ct)
+                rng_index.setdefault(str(fld_value), []).append(hitnum)
+                if fld_value not in query_list:
+                    query_list.append(fld_value)
+
+            ranges.setdefault(hitnum, {})[fld_name]=fld_value
+            if hitnum not in hit_order:
+                hit_order.append(hitnum)
+    return(rng_index, ranges, query_list, hit_order)
 
 def get_parameters(parameter_file):
     para_file = open(parameter_file, 'r')

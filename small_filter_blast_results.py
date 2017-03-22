@@ -4,8 +4,6 @@
 
 import sys
 import argparse
-import pandas as pd
-import numpy as np
 
 from gb_parsers.blast_parsers import * # >>change this to more direct method
 
@@ -17,7 +15,7 @@ type=str,
 help='BLAST file from which features will be extracted')
 
 parser.add_argument('-o', '--output', dest='out',
-type=str,
+type=argparse.FileType('w'),
 help='filtered blast file')
 
 parser.add_argument('-p', '--parameters', dest='para',
@@ -91,7 +89,7 @@ if args.ev:
     blast_parameters['MAX_EVALUE']=evalue
 # get blast results
 blast_results = blast_parser(blastfile, blast_tab_format)
-
+hit_order = blast_results[3]
 # filter blast results
 if len(blast_parameters) == 1:
     print('you did not enter any parameters to filter')
@@ -101,5 +99,15 @@ filt_blast_results = filter_blast(blast_results, blast_parameters)
 # >> add filter for limiting results to only best hit of group
 
 # write filtered results to file
-filt_blast_results.to_csv(blastout, sep='\t', index=False, header=False)
-
+for hit in hit_order:
+    if hit in filt_blast_results:
+        hit_values = filt_blast_results[hit]
+        #for key,value in filt_blast_results.iteritems():
+        blaststring = ''
+        for field in blast_tab_format:
+            #print field
+            field_value = str(hit_values[field])
+            blaststring = blaststring+field_value+'\t'
+        blastwrite = blaststring+'\n'
+        blastwrite = blastwrite.replace('\t\n','\n')
+        blast_output.write(blastwrite)

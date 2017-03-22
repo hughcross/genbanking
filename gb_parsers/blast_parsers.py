@@ -42,8 +42,8 @@ def get_parameters(parameter_file):
                 para_dict[para_name]=para_value
     return para_dict
 
-def filter_blast(blast_result_dict, blast_parameters):
-    """Filter a blast result dictionary based on variable parameters"""
+def filter_blast(blastDF, blast_parameters):
+    """Filter a blast result dictionary based on variable parameters using pandas"""
     ## >> have to add more to following
     field_match = {'SUB_LENGTH':'slen','MIN_QSTART':'qstart','MAX_QSTART':'qstart','MIN_QEND':'qend','MAX_QEND':'qend','MIN_SEND':'send','MAX_SEND':'send','MIN_BITSCORE':'bitscore','MIN_POSITIVE':'positive','MAX_GAPOPEN':'gapopen','MAX_GAPS':'gaps','IN_TITLE':'stitle','IN_SSEQ':'sseq','MIN_SSTART':'sstart','MAX_SSTART':'sstart','MIN_QCOV':'qcovs','MIN_LENGTH':'length','MIN_PCT_ID':'pident','MAX_MISMATCH':'mismatch','MAX_EVALUE':'evalue','IN_SUBJECT_ID':'sseqid'}
     mins = ['MIN_LENGTH','MIN_PCT_ID','MIN_SSTART','MIN_QCOV','SUB_LENGTH','MIN_QSTART','MIN_QEND','MIN_SEND','MIN_BITSCORE','MIN_POSITIVE'] 
@@ -52,27 +52,38 @@ def filter_blast(blast_result_dict, blast_parameters):
     filtered_blast = {}
     blast_parameters.pop('FORMAT')
     num_conditions = len(blast_parameters)
-    query_index = blast_result_dict[0]
-    hit_results = blast_result_dict[1]
-    #>> have to add option for limiting results to the single best match
-    for key, value in query_index.iteritems():
-        # add dictionary of lists for each hit, and then sort after all hits processed
-        for hit in value: # now loops through lists of hits for this query
-            conditions_reached = 0
-            hit_dict = hit_results[hit]
-            # now test all conditions separately
-            for k,v in blast_parameters.iteritems():
-                blast_field = field_match[k]
-                if k in mins:
-                    if hit_dict[blast_field] > v:
-                        conditions_reached += 1
-                elif k in maxes:
-                    if hit_dict[blast_field] < v:
-                        conditions_reached += 1
-                elif k in containers:
-                    if v in hit_dict[blast_field]: # need to fix this, was in v
-                        conditions_reached += 1
-
-            if conditions_reached == num_conditions:
-                filtered_blast[hit]=hit_dict
-    return filtered_blast
+    # for now have to build it as a string and then run 
+    string_list = []
+    for k,v in blast_parameters.iteritems():
+        
+        blast_field = field_match[k]
+        string = "blastDF[blast_field]"
+        if k in mins:
+            
+            string = string + "> %s" %(v)
+            
+        elif k in maxes:
+            string = string + "< %s" %(v)
+            
+                
+        elif k in containers:
+            string = string+".str.contains('%s')" % (v)
+            
+        string_list.append(string)
+    if num_conditions == 1:
+        cmd_string = string_list[0]
+        final_string = "filt_blastDF = blastDF["+cmd_string+"]"
+        exec(final_string)
+        
+    # for multiple conditions:
+    #blast3 = blast_table[(blast_table['pident'] > 35) & (blast_table['length'] > 100)]
+    else:
+        initial = "filt_blastDF = blastDF["
+        for cmd in string_list:
+            new_string = "("+cmd+")"
+            initial = initial+new_string+"&"
+        semifinal = initial[:-1]
+        final = semifinal+"]"
+        exec(final)
+    return filt_blastDF
+    

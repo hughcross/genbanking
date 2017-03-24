@@ -11,8 +11,20 @@ def blast_parser(blastfile, tab='standard'):
         fmt_list = ['qseqid', 'sseqid', 'pident', 'length', 'mismatch', 'gapopen', 'qstart', 'qend', 'sstart', 'send', 'evalue', 'bitscore']
     else:
         fmt_list = tab
-    
-    blastDF = pd.read_table(blastfile, sep='\t', names=fmt_list)
+    # have to assign data types to each field, so they are imported properly
+    integers = ['qlen','slen','qstart','qend','sstart','send','length','nident','mismatch','positive','gapopen','gaps','qcovs','qcovhsp']
+    floaters = ['bitscore','score','pident','ppos','evalue']
+    col_dtypes = {}
+    # loop through all fields
+    for fld in fmt_list:
+        if fld in integers:
+            col_dtypes[fld]='int'
+        elif fld in floaters:
+            col_dtypes[fld]='float'
+        else:
+            col_dtypes[fld]='str'
+
+    blastDF = pd.read_table(blastfile, sep='\t', dtype=col_dtypes, names=fmt_list)
     
     return blastDF
 

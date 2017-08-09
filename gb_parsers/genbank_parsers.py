@@ -77,15 +77,18 @@ def parse_gb_feature_dict(feature_dictionary):
                 cd_end = int(cd_locs.end)
                 cd_ornt = cd_locs.strand
                 cd_quals = ft.qualifiers
-                product = cd_quals['product']
-                trans = cd_quals['translation']
-                gb_protein = cd_quals['protein_id']
+                if 'product' in cd_quals:
+                    product = cd_quals['product']
+                    cds_dict.setdefault(k, {})['cds_product']=product
+                if 'translation' in cd_quals:
+                    trans = cd_quals['translation']
+                    cds_dict.setdefault(k, {})['cds_translation']=trans
+                if 'protein_id' in cd_quals:
+                    gb_protein = cd_quals['protein_id']
+                    cds_dict.setdefault(k, {})['ncbi_protein_id']=gb_protein
                 cds_dict.setdefault(k, {})['cds_start']=cd_start
                 cds_dict.setdefault(k, {})['cds_end']=cd_end
                 cds_dict.setdefault(k, {})['cds_orient']=cd_ornt
-                cds_dict.setdefault(k, {})['cds_product']=product
-                cds_dict.setdefault(k, {})['cds_translation']=trans
-                cds_dict.setdefault(k, {})['ncbi_protein_id']=gb_protein
             elif ft.type == 'gene':
                 #gen = ft.gene
                 gen_quals = ft.qualifiers

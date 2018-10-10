@@ -93,4 +93,5 @@ The full description can be added after the sequence name with -d. In the follow
 
 You can add both the gene and description to the end of the file, but that will usually be redundant. 
 
+## New
 

@@ -17,29 +17,32 @@ def parse_genbank_features(genbank_file):
         full_epithet = rec.annotations['organism']
         epithet = full_epithet.replace(' ','_').replace('.','')
         name = rec.name
-        if 'gi' in rec.annotations:
-            gi_id = rec.annotations['gi']
-            rec_id = epithet+':'+gi_id
-        else:
-            rec_id = epithet+':'+name
+        #if 'gi' in rec.annotations: Taking this option out, as GI being phased out
+         #   gi_id = rec.annotations['gi'] 
+          #  rec_id = epithet+':'+gi_id
+        #else:
+        rec_id = epithet+':'+name
         descr = rec.description
-        refs = rec.annotations['references']
-        ref0 = refs[0]
-        if ref0.pubmed_id:
-            pub = ref0.pubmed_id
-        else:
-            pub = 'none'
+        if 'references' in rec.annotations:
+
+            refs = rec.annotations['references']
+            ref0 = refs[0]
+            if ref0.pubmed_id:
+                pub = ref0.pubmed_id
+            else:
+                pub = 'none'
+            annots.setdefault(rec_id, {})['pubmed_id']=pub
         keywords = rec.annotations['keywords']
         # make annot dict
         annots.setdefault(rec_id, {})['keywords']=keywords
         annots.setdefault(rec_id, {})['description']=descr
         annots.setdefault(rec_id, {})['seq_name']=name
-        annots.setdefault(rec_id, {})['pubmed_id']=pub
-        if 'gi' in rec.annotations:
+        
+        #if 'gi' in rec.annotations:
 
-            annots.setdefault(rec_id, {})['gi']=gi_id
-        else:
-            annots.setdefault(rec_id, {})['gi']='none'
+         #   annots.setdefault(rec_id, {})['gi']=gi_id
+        #else:
+         #   annots.setdefault(rec_id, {})['gi']='none'
         # make sequence dict
         #sequence = str(rec.seq)
         #seqdict[rec_id]=sequence
@@ -56,7 +59,7 @@ def parse_gb_feature_dict(feature_dictionary):
     src_dict = {}
     cds_dict = {}
     gene_dict = {}
-    for k,v in feature_dictionary.iteritems():
+    for k,v in feature_dictionary.items():
         for ft in v:
             if ft.type == 'source':
                 src_locs = ft.location
@@ -66,6 +69,10 @@ def parse_gb_feature_dict(feature_dictionary):
                 src_quals = ft.qualifiers
                 org = src_quals['organism']
                 mol_typ = src_quals['mol_type']
+                if 'country' in src_quals:
+                    src_dict.setdefault(k, {})['country']=src_quals['country']
+                if 'isolate' in src_quals:
+                    src_dict.setdefault(k, {})['isolate']=src_quals['isolate']
                 src_dict.setdefault(k, {})['start']=src_start
                 src_dict.setdefault(k, {})['end']=src_end
                 src_dict.setdefault(k, {})['orient']=src_ornt

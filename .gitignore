@@ -4,3 +4,5 @@
 gb_parsers/*.pyc
 # jupyter notebook hidden files
 .ipynb_checkpoints/*
+.DS_Store
+gb_parsers/.DS_Store

@@ -12,8 +12,8 @@ def blast_parser(blastfile, tab='standard'):
     else:
         fmt_list = tab
     # have to assign data types to each field, so they are imported properly
-    integers = ['qlen','slen','qstart','qend','sstart','send','length','nident','mismatch','positive','gapopen','gaps','qcovs','qcovhsp']
-    floaters = ['bitscore','score','pident','ppos','evalue']
+    integers = ['qlen','slen','qstart','qend','sstart','send','length','nident','mismatch','positive','gapopen','gaps','qcovhsp']
+    floaters = ['bitscore','score','pident','ppos','qcovs','evalue']
     col_dtypes = {}
     # loop through all fields
     for fld in fmt_list:
@@ -66,7 +66,8 @@ def filter_blast(blastDF, blast_parameters):
     num_conditions = len(blast_parameters)
     # for now have to build it as a string and then run 
     string_list = []
-    for k,v in blast_parameters.iteritems():
+    # changed to python3 compatible in following dictionary iteration (items for iteritems)
+    for k,v in blast_parameters.items():
         
         blast_field = field_match[k]
         string = "blastDF[blast_field]"
